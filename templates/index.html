@@ -165,7 +165,6 @@
 
                 <!-- Hypothesis Testing Form -->
                 <form method="POST" action="/hypothesis_test">
-                    <!-- Hidden inputs to pass data generation parameters -->
                     <!-- Parameters are stored in session -->
                     <div class="form-group">
                         <label for="parameter">Parameter to Test:</label>
@@ -176,7 +175,7 @@
                         </select>
                     </div>
 
-                    <p>The null hypothesis will use the parameter value specified during data generation.</p>
+                    <p>The null hypothesis (H₀) will use the parameter value specified during data generation.</p>
 
                     <div class="form-group">
                         <label for="test_type">Type of Test:</label>
@@ -197,6 +196,8 @@
                     <p><strong>Observed {{ parameter.capitalize() }}:</strong> {{ observed_stat | round(4) }}</p>
                     <p><strong>Hypothesized Value (H₀):</strong> {{ hypothesized_value }}</p>
                     <p><strong>p-value:</strong> {{ p_value | round(4) }}</p>
+                    <p><strong>Mean (μ):</strong> {{ mu }}</p>
+                    <p><strong>Variance (σ²):</strong> {{ sigma2 }}</p>
                     {% if fun_message %}
                         <p class="success"><strong>{{ fun_message }}</strong></p>
                     {% endif %}

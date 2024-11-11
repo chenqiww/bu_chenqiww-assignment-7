@@ -107,6 +107,9 @@ def generate_data(N, mu, beta0, beta1, sigma2, S, seed):
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
+        # Clear session variables
+        session.clear()
+
         # Get user input from the form
         try:
             N = int(request.form["N"])
@@ -185,6 +188,9 @@ def index():
             flash(error_message)
             return redirect(url_for('index'))
     else:
+        # Clear session variables on GET request
+        session.clear()
+
         # Set default values
         N = 100
         mu = 0
@@ -229,7 +235,7 @@ def hypothesis_test():
         flash("Please select a parameter and test type for hypothesis testing.")
         return redirect(url_for('index'))
 
-    # Use the stored simulations
+    # Use the stored simulations and beta values as hypothesized values
     if parameter == "slope":
         simulated_stats = np.array(slopes)
         observed_stat = observed_slope
@@ -258,7 +264,7 @@ def hypothesis_test():
     fig3, ax3 = plt.subplots()
     ax3.hist(simulated_stats, bins=30, alpha=0.7, color='blue', edgecolor='black', label='Simulated Statistics')
     ax3.axvline(observed_stat, color='red', linestyle='dashed', linewidth=2, label=f'Observed {parameter.capitalize()}: {observed_stat:.4f}')
-    ax3.axvline(hypothesized_value, color='green', linestyle='solid', linewidth=2, label=f'Hypothesized {parameter.capitalize()} (H₀): {hypothesized_value:.4f}')
+    ax3.axvline(hypothesized_value, color='green', linestyle='solid', linewidth=2, label=f'H₀: {parameter.capitalize()} = {hypothesized_value:.4f}')
     ax3.set_xlabel(f'{parameter.capitalize()}')
     ax3.set_ylabel('Frequency')
     ax3.set_title(f'Hypothesis Test for {parameter.capitalize()}')
@@ -278,6 +284,8 @@ def hypothesis_test():
         N=N,
         beta0=beta0,
         beta1=beta1,
+        mu=mu,
+        sigma2=sigma2,
         S=S,
         p_value=p_value,
         fun_message=fun_message,
